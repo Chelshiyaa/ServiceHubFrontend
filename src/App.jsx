@@ -8,22 +8,33 @@ import ImageBanner from './components/ImageBanner.jsx';
 import TopProfessionals from './components/TopProfessionals.jsx';
 import HowItWorks from './components/HowItWorks.jsx';
 import Footer from './components/Footer.jsx';
-import GeminiChatbot from './components/GeminiChat.jsx'; // Re-added chatbot import
+import GeminiChatbot from './components/GeminiChat.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
 
-const HomePage = ({ onSearch, services, professionals, loading, error, user }) => (
+// HomePage component now accepts 'hasSearched' prop
+const HomePage = ({ onSearch, services, professionals, loading, error, user, hasSearched }) => (
   <>
     <HeroSection onSearch={onSearch} />
     {loading && <p className="text-center text-gray-600 my-6">Loading...</p>}
     {error && <p className="text-center text-red-600 my-6">{error}</p>}
     {!loading && (
       <>
+        {hasSearched && professionals.length > 0 && ( // Show professionals first if a search was performed and results exist
+          <TopProfessionals professionals={professionals} user={user} />
+        )}
+        {/* Always show Popular Services and Image Banner */}
         <PopularServices services={services} />
         <ImageBanner />
-        <TopProfessionals professionals={professionals} user={user} />
+        {!hasSearched && ( // Show professionals in original position only if no search was performed
+          <TopProfessionals professionals={professionals} user={user} />
+        )}
+        {/* If a search was performed but yielded no results, you might want to show a message here */}
+        {hasSearched && professionals.length === 0 && (
+          <p className="text-center text-gray-600 my-6">No professionals found for your search criteria.</p>
+        )}
         <HowItWorks />
       </>
     )}
@@ -36,6 +47,7 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [user, setUser] = useState(null);
+  const [hasSearched, setHasSearched] = useState(false); // New state to track if a search has been performed
 
   const fetchServices = async () => {
     const res = await axios.get(`${API_BASE}/api/services`);
@@ -63,6 +75,7 @@ const App = () => {
       const [sv, pros] = await Promise.all([fetchServices(), fetchPros()]);
       setServices(sv);
       setProfessionals(pros);
+      setHasSearched(false); // Reset hasSearched on initial load
     } catch (e) {
       setError(e.message || 'Failed to load data');
     } finally {
@@ -84,6 +97,7 @@ const App = () => {
         radiusKm: 8
       });
       setProfessionals(pros);
+      setHasSearched(true); // Set hasSearched to true after a search
     } catch (e) {
       setError(e.message || 'Search failed');
     } finally {
@@ -114,13 +128,14 @@ const App = () => {
               loading={loading}
               error={error}
               user={user}
+              hasSearched={hasSearched} // Pass hasSearched to HomePage
             />} />
             <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
             <Route path="/signup" element={<SignupPage onSignupSuccess={handleLoginSuccess} />} />
           </Routes>
         </main>
         <Footer />
-        <GeminiChatbot /> {/* Re-added chatbot component */}
+        <GeminiChatbot />
       </div>
     </Router>
   );
