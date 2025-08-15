@@ -1,13 +1,19 @@
 // components/TopProfessionals.jsx
 import React, { useState } from 'react';
-import { StarIcon, MessageCircleIcon, PhoneCallIcon } from './icons';
+import { StarIcon, PhoneCallIcon } from './icons'; // Removed MessageCircleIcon as it's not used
 
-const TopProfessionals = ({ professionals, user }) => {
-  // Removed: const [showBookingModal, setShowBookingModal] = useState(false);
-  // Removed: const [selectedProfessional, setSelectedProfessional] = useState(null);
+const TopProfessionals = ({ professionals, user }) => { // Ensure 'user' prop is received
   const [activeContact, setActiveContact] = useState(null); // State to toggle contact details visibility
 
   const handleBookNow = (pro) => {
+    // *** THIS IS THE CRUCIAL ADDITION ***
+    // Check if the user is logged in
+    if (!user) {
+      alert('Please log in to view contact details.');
+      return; // Stop the function execution if not logged in
+    }
+    // ************************************
+
     // Toggle the contact details for the clicked professional
     if (activeContact && activeContact._id === pro._id) {
       setActiveContact(null); // Hide if already visible
@@ -49,14 +55,13 @@ const TopProfessionals = ({ professionals, user }) => {
                   ))}
                 </div>
                 <div className="flex w-full space-x-4 mt-auto">
-                  {/* Removed the 'Chat' button */}
                   <button onClick={() => handleBookNow(pro)} className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center">
                     <PhoneCallIcon className="w-5 h-5 mr-2" /> Show Contact
                   </button>
                 </div>
               </div>
-              {/* Contact details section */}
-              {activeContact && activeContact._id === pro._id && (
+              {/* Contact details section - only visible if activeContact is set AND user is logged in */}
+              {activeContact && activeContact._id === pro._id && user && ( // Added 'user' check here as well
                 <div className="mt-4 p-6 bg-blue-50 border border-blue-200 rounded-xl shadow-inner text-left w-full animate-slide-in-down">
                   <h4 className="text-lg font-semibold text-blue-800 mb-2">Contact Details</h4>
                   <p className="text-gray-700">**Phone:** +91 98765 43210</p>
