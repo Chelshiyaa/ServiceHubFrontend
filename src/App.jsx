@@ -9,8 +9,8 @@ import TopProfessionals from './components/TopProfessionals.jsx';
 import HowItWorks from './components/HowItWorks.jsx';
 import Footer from './components/Footer.jsx';
 import GeminiChatbot from './components/GeminiChat.jsx';
-import LoginPage from './pages/LoginPage.jsx';
-import SignupPage from './pages/SignupPage.jsx';
+import Login from './pages/LoginPage.jsx';
+import Signup from './pages/SignupPage.jsx';
 // Import the new pages
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage.jsx';
 import TermsOfServicePage from './pages/TermsOfServicePage.jsx';
@@ -131,8 +131,8 @@ const App = () => {
               user={user}
               hasSearched={hasSearched}
             />} />
-            <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
-            <Route path="/signup" element={<SignupPage onSignupSuccess={handleLoginSuccess} />} />
+            <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+            <Route path="/signup" element={<Signup onSignupSuccess={handleLoginSuccess} />} />
             {/* Add the new routes here */}
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/terms-of-service" element={<TermsOfServicePage />} />
