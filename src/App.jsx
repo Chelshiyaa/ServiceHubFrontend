@@ -11,10 +11,13 @@ import Footer from './components/Footer.jsx';
 import GeminiChatbot from './components/GeminiChat.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
+// Import the new pages
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage.jsx';
+import TermsOfServicePage from './pages/TermsOfServicePage.jsx';
+import ContactUsPage from './pages/ContactUsPage.jsx';
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
 
-// HomePage component now accepts 'hasSearched' prop
 const HomePage = ({ onSearch, services, professionals, loading, error, user, hasSearched }) => (
   <>
     <HeroSection onSearch={onSearch} />
@@ -22,16 +25,14 @@ const HomePage = ({ onSearch, services, professionals, loading, error, user, has
     {error && <p className="text-center text-red-600 my-6">{error}</p>}
     {!loading && (
       <>
-        {hasSearched && professionals.length > 0 && ( // Show professionals first if a search was performed and results exist
+        {hasSearched && professionals.length > 0 && (
           <TopProfessionals professionals={professionals} user={user} />
         )}
-        {/* Always show Popular Services and Image Banner */}
         <PopularServices services={services} />
         <ImageBanner />
-        {!hasSearched && ( // Show professionals in original position only if no search was performed
+        {!hasSearched && (
           <TopProfessionals professionals={professionals} user={user} />
         )}
-        {/* If a search was performed but yielded no results, you might want to show a message here */}
         {hasSearched && professionals.length === 0 && (
           <p className="text-center text-gray-600 my-6">No professionals found for your search criteria.</p>
         )}
@@ -47,7 +48,7 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [user, setUser] = useState(null);
-  const [hasSearched, setHasSearched] = useState(false); // New state to track if a search has been performed
+  const [hasSearched, setHasSearched] = useState(false);
 
   const fetchServices = async () => {
     const res = await axios.get(`${API_BASE}/api/services`);
@@ -75,7 +76,7 @@ const App = () => {
       const [sv, pros] = await Promise.all([fetchServices(), fetchPros()]);
       setServices(sv);
       setProfessionals(pros);
-      setHasSearched(false); // Reset hasSearched on initial load
+      setHasSearched(false);
     } catch (e) {
       setError(e.message || 'Failed to load data');
     } finally {
@@ -97,7 +98,7 @@ const App = () => {
         radiusKm: 8
       });
       setProfessionals(pros);
-      setHasSearched(true); // Set hasSearched to true after a search
+      setHasSearched(true);
     } catch (e) {
       setError(e.message || 'Search failed');
     } finally {
@@ -128,10 +129,14 @@ const App = () => {
               loading={loading}
               error={error}
               user={user}
-              hasSearched={hasSearched} // Pass hasSearched to HomePage
+              hasSearched={hasSearched}
             />} />
             <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
             <Route path="/signup" element={<SignupPage onSignupSuccess={handleLoginSuccess} />} />
+            {/* Add the new routes here */}
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+            <Route path="/contact-us" element={<ContactUsPage />} />
           </Routes>
         </main>
         <Footer />

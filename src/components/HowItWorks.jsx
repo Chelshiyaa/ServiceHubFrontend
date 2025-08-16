@@ -4,7 +4,7 @@ import { SearchIcon, UserGroupIcon, CalendarIcon, StarIcon } from './icons';
 const steps = [
   { number: 1, icon: SearchIcon, title: 'Search & Browse', description: 'Find professionals using smart search and filters to discover exactly what you need.' },
   { number: 2, icon: UserGroupIcon, title: 'Compare Profiles', description: 'Review detailed profiles, ratings, and feedback to make the right choice.' },
-  { number: 3, icon: CalendarIcon, title: 'Book & Chat', description: 'Schedule your service and communicate directly with your chosen professional.' },
+  { number: 3, icon: CalendarIcon, title: 'Contact and Book', description: 'Schedule your service and communicate directly with your chosen professional.' },
   { number: 4, icon: StarIcon, title: 'Rate & Review', description: 'Share your experience to help others make informed decisions.' },
 ];
 
